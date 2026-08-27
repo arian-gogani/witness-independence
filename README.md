@@ -18,7 +18,7 @@ a receipt is evidence of.
 
 ## Running
 
-    python3 -="pip install pynacl
+    pip install pynacl
     ./run.sh          # grade every vector against its expected level
     python3 selftest.py   # plant failures and confirm the suite is load bearing
 
