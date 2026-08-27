@@ -89,29 +89,30 @@ of what happened.
 The measurement exists because four separate places in this ecosystem are silent on the
 same question.
 
--  requires a verification key to be externally
+- `draft-farley-acta-signed-receipts-02` requires a verification key to be externally
   anchored and never requires the anchor to be independent of the subject. No normative
   text in the draft addresses whether an agent may issue receipts about itself.
--  0.9.3 detects conformance tiers T1 to T5 in 
+- `@veritasacta/verify` 0.9.3 detects conformance tiers T1 to T5 in `src/conformance.js`
   from signature, canonicalization, chain linkage, disclosure, attestation mode, anchor
   URI, VOPRF and holder binding. Nothing in that computation compares issuer to subject.
-- In  at , the string 
+- In `ScopeBlind/agent-governance-testvectors` at `a320f24`, the string `issuer_id`
   appears exactly once in the whole repository, as an optional property in
-  . It is populated in no fixture, and no check compares an
-  issuer to a subject.
--  defines three cryptographic system attributes,
-  ,  and . All three describe
-  the signature. None describes the signer. The string  appears zero times across
-   and all 35 crosswalk files.
+  `expected/receipt-schema.json`. It is populated in no fixture, and no check compares
+  an issuer to a subject.
+- `aeoess/agent-governance-vocabulary` defines three cryptographic system attributes:
+  `signature_capability`, `canonicalization_profile` and `hash_family`. All three
+  describe the signature. None describes the signer. The string `custody` appears zero
+  times across `vocabulary.yaml` and all 35 crosswalk files.
 
 Open discussions:
 
-- , on a validator that silently skips 13 of 35
-  crosswalks. The single out-of-enum value hiding in that gap belongs to this author.
-- , proposing a fourth system attribute for key
-  custody.
-- , on a suite in which no receipt passes both
-  checks while CI reports green.
+- [aeoess/agent-governance-vocabulary#145](https://github.com/aeoess/agent-governance-vocabulary/issues/145),
+  on a validator that silently skips 13 of 35 crosswalks. The single out-of-enum value
+  hiding in that gap belongs to this author.
+- [aeoess/agent-governance-vocabulary#146](https://github.com/aeoess/agent-governance-vocabulary/issues/146),
+  proposing a fourth system attribute for key custody.
+- [ScopeBlind/agent-governance-testvectors#13](https://github.com/ScopeBlind/agent-governance-testvectors/issues/13),
+  on a suite in which no receipt passes both checks while CI reports green.
 
 ## What this is not
 
