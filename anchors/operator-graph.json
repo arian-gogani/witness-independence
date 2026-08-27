@@ -1,0 +1,38 @@
+{
+  "declared_by": "wil-vector-fixture",
+  "note": "Every fact in this file is operator declared. No run establishes it. independent_of is required to reach W3: independence has to be claimed by somebody, because a graph that stays silent about a controller has not shown that controller to be independent.",
+  "operates": {
+    "platform.example": [
+      "did:web:agent.example",
+      "agent.example"
+    ]
+  },
+  "independent_of": {
+    "witness.example": [
+      "did:web:agent.example",
+      "agent.example"
+    ],
+    "observer.example": [
+      "did:web:agent.example",
+      "agent.example"
+    ],
+    "shared.example": [
+      "did:web:agent.example",
+      "agent.example"
+    ],
+    "gamma.example": [
+      "did:web:agent.example",
+      "agent.example"
+    ],
+    "delta.example": [
+      "did:web:agent.example",
+      "agent.example"
+    ]
+  },
+  "shared_roots": [
+    [
+      "gamma.example",
+      "delta.example"
+    ]
+  ]
+}

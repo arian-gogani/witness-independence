@@ -1,0 +1,27 @@
+{
+  "expect": "W1",
+  "why": "the envelope also carries a public_key field; the level must come from where the key actually resolved, and the embedded field must not raise or lower it",
+  "attestations": [
+    {
+      "v": 2,
+      "type": "decision_receipt",
+      "algorithm": "ed25519",
+      "kid": "agent-self-2026",
+      "issued_at": "2026-08-26T00:00:00Z",
+      "payload": {
+        "type": "decision_receipt",
+        "subject": "did:web:agent.example",
+        "action": {
+          "kind": "Bash",
+          "target": "rm -rf /tmp/scratch"
+        },
+        "decision": "deny",
+        "policy_id": "autoresearch-safe",
+        "sequence": 0,
+        "timestamp": "2026-08-26T00:00:00Z"
+      },
+      "signature": "CTUF_3iDrlX5upRe_87vQpQu7H_0mISDq78bwyh23cwKPpBEMnifvwSvnjwDWraHkbkJLGqZscNlj1zOYpIgAg",
+      "public_key": "b1f0b1f0b1f0b1f0b1f0b1f0b1f0b1f0b1f0b1f0b1f0b1f0b1f0b1f0b1f0b1f0"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "expect": "W1",
+  "why": "anchor_uri points at an independent domain but the key resolved from the subject's own; grading must follow the resolution, not the claim",
+  "attestations": [
+    {
+      "v": 2,
+      "type": "decision_receipt",
+      "algorithm": "ed25519",
+      "kid": "agent-self-2026",
+      "issued_at": "2026-08-26T00:00:00Z",
+      "payload": {
+        "type": "decision_receipt",
+        "subject": "did:web:agent.example",
+        "action": {
+          "kind": "Bash",
+          "target": "rm -rf /tmp/scratch"
+        },
+        "decision": "deny",
+        "policy_id": "autoresearch-safe",
+        "sequence": 0,
+        "timestamp": "2026-08-26T00:00:00Z",
+        "anchor_uri": "https://witness.example/.well-known/jwks.json"
+      },
+      "signature": "6jKX3KkTYQ7nVPs3Ju6GFzYJED6DiQw3qLBQxat0zosTNxCS2RMmkAVtOgXHnACnxXXja5a2gF_Ri2axFVfRBQ"
+    }
+  ]
+}

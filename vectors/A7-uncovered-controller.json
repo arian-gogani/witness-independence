@@ -1,0 +1,26 @@
+{
+  "expect": "W2?",
+  "why": "the same attestation as P1, graded against an operator graph that says nothing about witness.example; the level must fall to undetermined rather than rise to W3, because a missing input must never produce the stronger verdict. This vector exists because the first implementation of this tool got it wrong in exactly that direction. It is run against anchors/operator-graph-silent.json.",
+  "attestations": [
+    {
+      "v": 2,
+      "type": "decision_receipt",
+      "algorithm": "ed25519",
+      "kid": "witness-2026",
+      "issued_at": "2026-08-26T00:00:00Z",
+      "payload": {
+        "type": "decision_receipt",
+        "subject": "did:web:agent.example",
+        "action": {
+          "kind": "Bash",
+          "target": "rm -rf /tmp/scratch"
+        },
+        "decision": "deny",
+        "policy_id": "autoresearch-safe",
+        "sequence": 0,
+        "timestamp": "2026-08-26T00:00:00Z"
+      },
+      "signature": "WBhssIsSepTe0sh1_gwDbt0bJW8dHHvk5_M75jhQ5HY4-Vq3jMQIWhWtGEZtnCHCEvS2A9lPUUl6is0lh74VCg"
+    }
+  ]
+}

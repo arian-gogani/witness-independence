@@ -1,0 +1,46 @@
+{
+  "expect": "W3",
+  "why": "two controllers on distinct domains that the operator graph declares share a root; the transitive closure must collapse them to one witness",
+  "attestations": [
+    {
+      "v": 2,
+      "type": "decision_receipt",
+      "algorithm": "ed25519",
+      "kid": "gamma-2026",
+      "issued_at": "2026-08-26T00:00:00Z",
+      "payload": {
+        "type": "decision_receipt",
+        "subject": "did:web:agent.example",
+        "action": {
+          "kind": "Bash",
+          "target": "rm -rf /tmp/scratch"
+        },
+        "decision": "deny",
+        "policy_id": "autoresearch-safe",
+        "sequence": 0,
+        "timestamp": "2026-08-26T00:00:00Z"
+      },
+      "signature": "4YY9-6nAzTuik_VTyMqDgnICvR-7owWt51Is0oOTXBYRC7CAcGBGK1XklnH1S1norqsroyVS4yibtjKksi1FAQ"
+    },
+    {
+      "v": 2,
+      "type": "decision_receipt",
+      "algorithm": "ed25519",
+      "kid": "delta-2026",
+      "issued_at": "2026-08-26T00:00:00Z",
+      "payload": {
+        "type": "decision_receipt",
+        "subject": "did:web:agent.example",
+        "action": {
+          "kind": "Bash",
+          "target": "rm -rf /tmp/scratch"
+        },
+        "decision": "deny",
+        "policy_id": "autoresearch-safe",
+        "sequence": 0,
+        "timestamp": "2026-08-26T00:00:00Z"
+      },
+      "signature": "INjsIr5pOgWdoli9kUITmLxe-7w7eiOuDY42whqm4t84ul9trg3Dxdd5eMsyhxViIH-CkHad0H-uBM0ia_04Cg"
+    }
+  ]
+}

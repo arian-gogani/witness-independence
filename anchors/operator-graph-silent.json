@@ -1,0 +1,7 @@
+{
+  "declared_by": "wil-vector-fixture",
+  "note": "Deliberately empty. Used only by A7, to establish that silence about a controller does not award independence.",
+  "operates": {},
+  "independent_of": {},
+  "shared_roots": []
+}

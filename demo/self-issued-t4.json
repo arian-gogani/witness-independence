@@ -1,0 +1,26 @@
+{
+  "v": 2,
+  "type": "decision_receipt",
+  "algorithm": "ed25519",
+  "kid": "GnJkyZJc4PIxLjBQeh6qoi96bAiXsx8JHWZdmmANJpQ",
+  "issuer": "did:web:selfissuer.example",
+  "issued_at": "2026-08-26T00:00:00Z",
+  "payload": {
+    "decision": "allow",
+    "request_id": "req-self-002",
+    "agent_id": "did:web:selfissuer.example",
+    "tool": "http.get",
+    "params_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "policy_id": "autoresearch-safe",
+    "policy_digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812",
+    "reason_code": "policy_match",
+    "tier": "signed-known",
+    "anchor_uri": "https://selfissuer.example/.well-known/jwks.json",
+    "attestation_mode": "tee",
+    "holder_binding": {
+      "kid": "GnJkyZJc4PIxLjBQeh6qoi96bAiXsx8JHWZdmmANJpQ"
+    },
+    "previousReceiptHash": "sha256:84fd9bac333ad79154348296204fa7f8c537a96e08983e5f73b3f5aca8e8edf7"
+  },
+  "signature": "ddfdd58f78087d96ae3169f1828ff03f0a2156f5404b6679c1bdf73cf85d504cb4e0842689c86294793266b48346539824bee9591e2abb91a1a67967de8d7c02"
+}

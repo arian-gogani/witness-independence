@@ -1,0 +1,46 @@
+{
+  "expect": "W3",
+  "why": "two distinct kid values, two attestations, one controller; an implementation that counts distinct kid values reaches W4 here and is wrong",
+  "attestations": [
+    {
+      "v": 2,
+      "type": "decision_receipt",
+      "algorithm": "ed25519",
+      "kid": "alpha-2026",
+      "issued_at": "2026-08-26T00:00:00Z",
+      "payload": {
+        "type": "decision_receipt",
+        "subject": "did:web:agent.example",
+        "action": {
+          "kind": "Bash",
+          "target": "rm -rf /tmp/scratch"
+        },
+        "decision": "deny",
+        "policy_id": "autoresearch-safe",
+        "sequence": 0,
+        "timestamp": "2026-08-26T00:00:00Z"
+      },
+      "signature": "Kvk9LSjGprheu-9OKvyEVJnReDkY0wqB-FAu0hk1XySW4hoG3UCq0HzodQwOiTg8szBHtIGcZMn2UYyHW_iJBw"
+    },
+    {
+      "v": 2,
+      "type": "decision_receipt",
+      "algorithm": "ed25519",
+      "kid": "beta-2026",
+      "issued_at": "2026-08-26T00:00:00Z",
+      "payload": {
+        "type": "decision_receipt",
+        "subject": "did:web:agent.example",
+        "action": {
+          "kind": "Bash",
+          "target": "rm -rf /tmp/scratch"
+        },
+        "decision": "deny",
+        "policy_id": "autoresearch-safe",
+        "sequence": 0,
+        "timestamp": "2026-08-26T00:00:00Z"
+      },
+      "signature": "KyG6Ky9YLSLzfGcAkHWJhRJdHaH5nmdrxYVjJ0mdBNFXHpgahnsu2M6KAty0mfQ0d0twJt1uDqH7K9XoH_foBg"
+    }
+  ]
+}

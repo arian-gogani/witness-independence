@@ -1,0 +1,20 @@
+{
+  "v": 2,
+  "type": "decision_receipt",
+  "algorithm": "ed25519",
+  "kid": "GnJkyZJc4PIxLjBQeh6qoi96bAiXsx8JHWZdmmANJpQ",
+  "issuer": "did:web:selfissuer.example",
+  "issued_at": "2026-08-26T00:00:00Z",
+  "payload": {
+    "decision": "allow",
+    "request_id": "req-self-001",
+    "agent_id": "did:web:selfissuer.example",
+    "tool": "http.get",
+    "params_hash": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "policy_id": "autoresearch-safe",
+    "policy_digest": "sha256:823412d1eacb67956220e532959f0104603057c88704863ca38e7cd188fda812",
+    "reason_code": "policy_match",
+    "tier": "signed-known"
+  },
+  "signature": "ba862438adb5d7602adf0643ade2d025fcea385cdfcfcce304ff7c93e62bea68b61d5869cc3ac49689e1aa5a2b3db6c01d47e14c8f6f228c7dac5d271e9ba002"
+}

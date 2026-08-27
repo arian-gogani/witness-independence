@@ -1,0 +1,56 @@
+name: conformance
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: install
+        run: python -="pip install --quiet pynacl jsonschema pyyaml
+
+      # The corpus is regenerated rather than trusted, and the run fails if the
+      # committed fixtures are not what the generator produces. A corpus that
+      # cannot be reproduced is not a corpus.
+      - name: corpus reproduces from source
+        run: |
+          cp -r vectors /tmp/vectors-committed
+          cp -r anchors /tmp/anchors-committed
+          rm -rf vectors anchors && mkdir -p vectors anchors
+          python3 tools/gen_vectors.py
+          diff -r vectors /tmp/vectors-committed
+          diff -r anchors /tmp/anchors-committed
+
+      - name: vectors
+        run: ./run.sh
+
+      - name: falsifiability
+        run: python3 selftest.py
+
+      # The one check this file exists for. Everything above must be able to
+      # fail the job, so that is asserted here rather than assumed.
+      - name: the suite can actually fail
+        run: |
+          set -e
+          cp vectors/A2-self-anchored.json /tmp/planted.json
+          python3 - <<'PY'
+          import json
+          d = json.load(open('/tmp/planted.json'))
+          d['expect'] = 'W4'
+          json.dump(d, open('vectors/_planted.json', 'w'))
+          PY
+          if ./run.sh > /dev/null 2>&1; then
+            echo "run.sh returned 0 on a planted failure; the gate is not a gate"
+            exit 1
+          fi
+          rm vectors/_planted.json
+          ./run.sh > /dev/null
+          echo "planted failure was caught and the clean run still passes"

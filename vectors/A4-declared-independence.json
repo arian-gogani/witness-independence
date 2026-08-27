@@ -1,0 +1,29 @@
+{
+  "expect": "W1",
+  "why": "the receipt asserts its own independence in three separate fields; the level must be identical to A2, which is the same receipt without them",
+  "attestations": [
+    {
+      "v": 2,
+      "type": "decision_receipt",
+      "algorithm": "ed25519",
+      "kid": "agent-self-2026",
+      "issued_at": "2026-08-26T00:00:00Z",
+      "payload": {
+        "type": "decision_receipt",
+        "subject": "did:web:agent.example",
+        "action": {
+          "kind": "Bash",
+          "target": "rm -rf /tmp/scratch"
+        },
+        "decision": "deny",
+        "policy_id": "autoresearch-safe",
+        "sequence": 0,
+        "timestamp": "2026-08-26T00:00:00Z",
+        "witness_independence": "W4",
+        "third_party": true,
+        "self_attested": false
+      },
+      "signature": "5HvyHqzetP9u0f2WDOQR8VbHsAUsPqRH42P3fHNpLQjf7DeyZMbuYam3g2LJ4ZvqHlHxGkJjJFRZi0udinB8Dg"
+    }
+  ]
+}

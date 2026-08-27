@@ -1,0 +1,166 @@
+{
+  "expect": "W1",
+  "why": "eight valid self-anchored receipts in sequence; chain length must not raise the level, because volume of self-attestation is still self-attestation",
+  "attestations": [
+    {
+      "v": 2,
+      "type": "decision_receipt",
+      "algorithm": "ed25519",
+      "kid": "agent-self-2026",
+      "issued_at": "2026-08-26T00:00:00Z",
+      "payload": {
+        "type": "decision_receipt",
+        "subject": "did:web:agent.example",
+        "action": {
+          "kind": "Bash",
+          "target": "rm -rf /tmp/scratch"
+        },
+        "decision": "deny",
+        "policy_id": "autoresearch-safe",
+        "sequence": 0,
+        "timestamp": "2026-08-26T00:00:00Z"
+      },
+      "signature": "CTUF_3iDrlX5upRe_87vQpQu7H_0mISDq78bwyh23cwKPpBEMnifvwSvnjwDWraHkbkJLGqZscNlj1zOYpIgAg"
+    },
+    {
+      "v": 2,
+      "type": "decision_receipt",
+      "algorithm": "ed25519",
+      "kid": "agent-self-2026",
+      "issued_at": "2026-08-26T00:00:00Z",
+      "payload": {
+        "type": "decision_receipt",
+        "subject": "did:web:agent.example",
+        "action": {
+          "kind": "Bash",
+          "target": "rm -rf /tmp/scratch"
+        },
+        "decision": "deny",
+        "policy_id": "autoresearch-safe",
+        "sequence": 1,
+        "timestamp": "2026-08-26T00:00:00Z"
+      },
+      "signature": "iiXILjbKvufVXtGe6DBH2W6PYzeOkLPQRsTRAFSE9Y3qTqiHJTWJXZhTqKdrsPZT1m2roUBlHzkdvhJlhfr8DQ"
+    },
+    {
+      "v": 2,
+      "type": "decision_receipt",
+      "algorithm": "ed25519",
+      "kid": "agent-self-2026",
+      "issued_at": "2026-08-26T00:00:00Z",
+      "payload": {
+        "type": "decision_receipt",
+        "subject": "did:web:agent.example",
+        "action": {
+          "kind": "Bash",
+          "target": "rm -rf /tmp/scratch"
+        },
+        "decision": "deny",
+        "policy_id": "autoresearch-safe",
+        "sequence": 2,
+        "timestamp": "2026-08-26T00:00:00Z"
+      },
+      "signature": "cmGG3XlQZXyPYJrF3D4NYvBdkdxnlSxn3bCZ_y4ESV7ljgFc-XwfLc9xtvhM7SvJD9TadJaxX2rg__aYKwx3Aw"
+    },
+    {
+      "v": 2,
+      "type": "decision_receipt",
+      "algorithm": "ed25519",
+      "kid": "agent-self-2026",
+      "issued_at": "2026-08-26T00:00:00Z",
+      "payload": {
+        "type": "decision_receipt",
+        "subject": "did:web:agent.example",
+        "action": {
+          "kind": "Bash",
+          "target": "rm -rf /tmp/scratch"
+        },
+        "decision": "deny",
+        "policy_id": "autoresearch-safe",
+        "sequence": 3,
+        "timestamp": "2026-08-26T00:00:00Z"
+      },
+      "signature": "9WZQDuJ179iWofqWxN6Y1O2nINEoK7OqUDoouzteFY7FVX6qdkfWkVYUlmQeN-pCNdXkwh-0DD9XVcWXuPVoCw"
+    },
+    {
+      "v": 2,
+      "type": "decision_receipt",
+      "algorithm": "ed25519",
+      "kid": "agent-self-2026",
+      "issued_at": "2026-08-26T00:00:00Z",
+      "payload": {
+        "type": "decision_receipt",
+        "subject": "did:web:agent.example",
+        "action": {
+          "kind": "Bash",
+          "target": "rm -rf /tmp/scratch"
+        },
+        "decision": "deny",
+        "policy_id": "autoresearch-safe",
+        "sequence": 4,
+        "timestamp": "2026-08-26T00:00:00Z"
+      },
+      "signature": "HgLds-Uvip_WFJ-Pt3JmwEjWXdAlQn7LApAB-laa7KF-wo4kr-V6FSaCcxR_igmx-VrjAML8u7gqQheQwf9GDg"
+    },
+    {
+      "v": 2,
+      "type": "decision_receipt",
+      "algorithm": "ed25519",
+      "kid": "agent-self-2026",
+      "issued_at": "2026-08-26T00:00:00Z",
+      "payload": {
+        "type": "decision_receipt",
+        "subject": "did:web:agent.example",
+        "action": {
+          "kind": "Bash",
+          "target": "rm -rf /tmp/scratch"
+        },
+        "decision": "deny",
+        "policy_id": "autoresearch-safe",
+        "sequence": 5,
+        "timestamp": "2026-08-26T00:00:00Z"
+      },
+      "signature": "8AKDQwNln0dJmNIxIcSgBufLR1TbgBA4qgeI0p1RTPcpOu7yFjbSETm1EqY4pVuBniLYuvYFJPd0IuxucS-NCA"
+    },
+    {
+      "v": 2,
+      "type": "decision_receipt",
+      "algorithm": "ed25519",
+      "kid": "agent-self-2026",
+      "issued_at": "2026-08-26T00:00:00Z",
+      "payload": {
+        "type": "decision_receipt",
+        "subject": "did:web:agent.example",
+        "action": {
+          "kind": "Bash",
+          "target": "rm -rf /tmp/scratch"
+        },
+        "decision": "deny",
+        "policy_id": "autoresearch-safe",
+        "sequence": 6,
+        "timestamp": "2026-08-26T00:00:00Z"
+      },
+      "signature": "s5wko_K_215ujcENz9vJahHqdnsi97ZoT0B0ZKHy_EEb0AZpRW2YegqA8hNmskwB_1N4dMWQk7eXaYaQdS5ZCA"
+    },
+    {
+      "v": 2,
+      "type": "decision_receipt",
+      "algorithm": "ed25519",
+      "kid": "agent-self-2026",
+      "issued_at": "2026-08-26T00:00:00Z",
+      "payload": {
+        "type": "decision_receipt",
+        "subject": "did:web:agent.example",
+        "action": {
+          "kind": "Bash",
+          "target": "rm -rf /tmp/scratch"
+        },
+        "decision": "deny",
+        "policy_id": "autoresearch-safe",
+        "sequence": 7,
+        "timestamp": "2026-08-26T00:00:00Z"
+      },
+      "signature": "5LxYrMW8moNdax2l8kfXmZo92NS1D5dBvr_3rfXQY7nHirBmfCEVgcY9e0ilEO8XnZtGDmpAJKCWBuxrkoImCQ"
+    }
+  ]
+}

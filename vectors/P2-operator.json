@@ -1,0 +1,26 @@
+{
+  "expect": "W2",
+  "why": "key resolves from platform.example, declared in the operator graph as operating the subject",
+  "attestations": [
+    {
+      "v": 2,
+      "type": "decision_receipt",
+      "algorithm": "ed25519",
+      "kid": "platform-2026",
+      "issued_at": "2026-08-26T00:00:00Z",
+      "payload": {
+        "type": "decision_receipt",
+        "subject": "did:web:agent.example",
+        "action": {
+          "kind": "Bash",
+          "target": "rm -rf /tmp/scratch"
+        },
+        "decision": "deny",
+        "policy_id": "autoresearch-safe",
+        "sequence": 0,
+        "timestamp": "2026-08-26T00:00:00Z"
+      },
+      "signature": "M0lCxxGiXlxpYvKDbu4QK92Z7YKpIvX2ygzJU_V7LqpAMTq4dWXdvkuH1h14UGDdj8ezJsqRBRt26LIUA4G6CQ"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "note": "Offline stand-in for live JWKS and DID resolution. served_from is the location the resolver would have fetched the key from; the level is computed from that location, never from a field inside a receipt.",
+  "anchors": [
+    {
+      "served_from": "https://agent.example/.well-known/jwks.json",
+      "keys": [
+        {
+          "kid": "agent-self-2026",
+          "public_key_hex": "fcb087045cbc2d1fd510a96a6ee633f468ffa49b73af27ba10ee1f541b67e518"
+        }
+      ]
+    },
+    {
+      "served_from": "https://delta.example/.well-known/jwks.json",
+      "keys": [
+        {
+          "kid": "delta-2026",
+          "public_key_hex": "be15b24db8ea3311749cb26ab31012729d4a09bbee4b33c42f72402141d3e0dd"
+        }
+      ]
+    },
+    {
+      "served_from": "https://gamma.example/.well-known/jwks.json",
+      "keys": [
+        {
+          "kid": "gamma-2026",
+          "public_key_hex": "4e1aaa853b378b861b25a3cac2630aa398ce4bc709cd580bd20c66de5fd3673c"
+        }
+      ]
+    },
+    {
+      "served_from": "https://observer.example/.well-known/jwks.json",
+      "keys": [
+        {
+          "kid": "observer-2026",
+          "public_key_hex": "aea2b70b8a284129202acb2ccc69219f387f9d31a432498897701b1b2d02c4c4"
+        }
+      ]
+    },
+    {
+      "served_from": "https://platform.example/.well-known/jwks.json",
+      "keys": [
+        {
+          "kid": "platform-2026",
+          "public_key_hex": "af04773418cbd0cb3ec2701b89c5b54c9c7396e579653787b5217a5b462b9f88"
+        }
+      ]
+    },
+    {
+      "served_from": "https://shared.example/.well-known/jwks.json",
+      "keys": [
+        {
+          "kid": "alpha-2026",
+          "public_key_hex": "ed75adf92762301247705bfb51761f4e66d7747c529cc3a38cfd0ddcb056fc9c"
+        },
+        {
+          "kid": "beta-2026",
+          "public_key_hex": "625f58947b9fb9162c0907a07427ee261edce4d4a5b0c2c975287f42c61041b9"
+        }
+      ]
+    },
+    {
+      "served_from": "https://witness.example/.well-known/jwks.json",
+      "keys": [
+        {
+          "kid": "witness-2026",
+          "public_key_hex": "787a17c403630a097d4a95560f822b0b7b15cee28a70c6d062a162607ce9edec"
+        }
+      ]
+    }
+  ]
+}

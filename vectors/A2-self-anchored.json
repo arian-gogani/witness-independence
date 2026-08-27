@@ -1,0 +1,26 @@
+{
+  "expect": "W1",
+  "why": "a well formed anchor at a well known path with a correct kid and a valid signature, served by the subject's own domain; this is the case that passes every published check in the ecosystem today",
+  "attestations": [
+    {
+      "v": 2,
+      "type": "decision_receipt",
+      "algorithm": "ed25519",
+      "kid": "agent-self-2026",
+      "issued_at": "2026-08-26T00:00:00Z",
+      "payload": {
+        "type": "decision_receipt",
+        "subject": "did:web:agent.example",
+        "action": {
+          "kind": "Bash",
+          "target": "rm -rf /tmp/scratch"
+        },
+        "decision": "deny",
+        "policy_id": "autoresearch-safe",
+        "sequence": 0,
+        "timestamp": "2026-08-26T00:00:00Z"
+      },
+      "signature": "CTUF_3iDrlX5upRe_87vQpQu7H_0mISDq78bwyh23cwKPpBEMnifvwSvnjwDWraHkbkJLGqZscNlj1zOYpIgAg"
+    }
+  ]
+}

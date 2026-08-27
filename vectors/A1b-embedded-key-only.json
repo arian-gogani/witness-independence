@@ -1,0 +1,27 @@
+{
+  "expect": "W0",
+  "why": "the only verification key available is inside the envelope; the ACTA draft forbids trusting it, so nothing is attested",
+  "attestations": [
+    {
+      "v": 2,
+      "type": "decision_receipt",
+      "algorithm": "ed25519",
+      "kid": "not-in-any-anchor",
+      "issued_at": "2026-08-26T00:00:00Z",
+      "payload": {
+        "type": "decision_receipt",
+        "subject": "did:web:agent.example",
+        "action": {
+          "kind": "Bash",
+          "target": "rm -rf /tmp/scratch"
+        },
+        "decision": "deny",
+        "policy_id": "autoresearch-safe",
+        "sequence": 0,
+        "timestamp": "2026-08-26T00:00:00Z"
+      },
+      "signature": "CTUF_3iDrlX5upRe_87vQpQu7H_0mISDq78bwyh23cwKPpBEMnifvwSvnjwDWraHkbkJLGqZscNlj1zOYpIgAg",
+      "public_key": "b1f0b1f0b1f0b1f0b1f0b1f0b1f0b1f0b1f0b1f0b1f0b1f0b1f0b1f0b1f0b1f0"
+    }
+  ]
+}

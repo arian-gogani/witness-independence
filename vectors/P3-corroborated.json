@@ -1,0 +1,46 @@
+{
+  "expect": "W4",
+  "why": "two independent attestations over the same action resting on two distinct roots",
+  "attestations": [
+    {
+      "v": 2,
+      "type": "decision_receipt",
+      "algorithm": "ed25519",
+      "kid": "witness-2026",
+      "issued_at": "2026-08-26T00:00:00Z",
+      "payload": {
+        "type": "decision_receipt",
+        "subject": "did:web:agent.example",
+        "action": {
+          "kind": "Bash",
+          "target": "rm -rf /tmp/scratch"
+        },
+        "decision": "deny",
+        "policy_id": "autoresearch-safe",
+        "sequence": 0,
+        "timestamp": "2026-08-26T00:00:00Z"
+      },
+      "signature": "WBhssIsSepTe0sh1_gwDbt0bJW8dHHvk5_M75jhQ5HY4-Vq3jMQIWhWtGEZtnCHCEvS2A9lPUUl6is0lh74VCg"
+    },
+    {
+      "v": 2,
+      "type": "decision_receipt",
+      "algorithm": "ed25519",
+      "kid": "observer-2026",
+      "issued_at": "2026-08-26T00:00:00Z",
+      "payload": {
+        "type": "decision_receipt",
+        "subject": "did:web:agent.example",
+        "action": {
+          "kind": "Bash",
+          "target": "rm -rf /tmp/scratch"
+        },
+        "decision": "deny",
+        "policy_id": "autoresearch-safe",
+        "sequence": 0,
+        "timestamp": "2026-08-26T00:00:00Z"
+      },
+      "signature": "zU9CPFYPBvsW5aYVsxMT05rcs6twI08GuMaJD6I9h-rLMrYGk0SROIc-IiZlzhxQOoOH0W3tOi0V_vNVYjL7Dg"
+    }
+  ]
+}
