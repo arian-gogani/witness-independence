@@ -84,6 +84,35 @@ is an accusation. A W1 receipt is a valid, well formed, cryptographically sound
 record of what its signer asserted. The level says how far that is from a record
 of what happened.
 
+## Where this came from, and where it is being discussed
+
+The measurement exists because four separate places in this ecosystem are silent on the
+same question.
+
+-  requires a verification key to be externally
+  anchored and never requires the anchor to be independent of the subject. No normative
+  text in the draft addresses whether an agent may issue receipts about itself.
+-  0.9.3 detects conformance tiers T1 to T5 in 
+  from signature, canonicalization, chain linkage, disclosure, attestation mode, anchor
+  URI, VOPRF and holder binding. Nothing in that computation compares issuer to subject.
+- In  at , the string 
+  appears exactly once in the whole repository, as an optional property in
+  . It is populated in no fixture, and no check compares an
+  issuer to a subject.
+-  defines three cryptographic system attributes,
+  ,  and . All three describe
+  the signature. None describes the signer. The string  appears zero times across
+   and all 35 crosswalk files.
+
+Open discussions:
+
+- , on a validator that silently skips 13 of 35
+  crosswalks. The single out-of-enum value hiding in that gap belongs to this author.
+- , proposing a fourth system attribute for key
+  custody.
+- , on a suite in which no receipt passes both
+  checks while CI reports green.
+
 ## What this is not
 
 Not a measure of whether an action was correct, whether a policy was well
