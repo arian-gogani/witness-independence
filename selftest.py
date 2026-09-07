@@ -223,6 +223,57 @@ rc = subprocess.run(["bash", os.path.join(HERE, "run.sh")],
                     capture_output=True, text=True).returncode
 check("run.sh exits zero when every vector matches", rc == 0, f"exit={rc}")
 
+# == --require is a strength threshold, and cannot be met by knowing less ==
+#
+# ORDER is one line from weakest to strongest, but W2? is not a strength. It
+# records that independence was not determined. Mixing the two on one axis made
+# the gate satisfiable by withholding evidence: the same receipts grade W2 with
+# an operator graph and W2? without one, W2? sorts higher, and `--require W2?`
+# therefore failed for the party who declared their operator relationships and
+# passed for the party who did not. That is this tool's own argument backwards.
+
+_bare = os.path.join(HERE, "vectors", "_require_probe.json")
+with open(_bare, "w") as _fh:
+    json.dump(json.load(open(os.path.join(HERE, "vectors",
+                                          "P2-operator.json")))["attestations"],
+              _fh)
+
+
+def _cli(*extra):
+    return subprocess.run(
+        [sys.executable, "-m", "wil.cli", _bare,
+         "--trust-set", os.path.join(HERE, "anchors/trust-set.json")]
+        + list(extra),
+        capture_output=True, text=True, cwd=HERE).returncode
+
+
+_graph = ["--operator-graph", os.path.join(HERE, "anchors/operator-graph.json")]
+
+try:
+    _with = _cli(*(_graph + ["--require", "W2?"]))
+    _without = _cli("--require", "W2?")
+    check("requiring W2? is refused rather than gated",
+          _with == 2 and _without == 2, f"with={_with} without={_without}")
+    check("withholding the operator graph cannot pass a gate that supplying it "
+          "fails", _with == _without, f"with={_with} without={_without}")
+
+    _diverged = [lv for lv in ("W0", "W1", "W2", "W3", "W4")
+                 if _cli(*(_graph + ["--require", lv])) != _cli("--require", lv)]
+    check("no strength threshold changes when the operator graph is withheld",
+          not _diverged, f"diverged at {_diverged}")
+
+    _bad = _cli("--require", "W9")
+    check("an unknown level is refused with a message, not a traceback",
+          _bad == 2, f"exit={_bad}")
+
+    check("a threshold the set clears still passes",
+          _cli(*(_graph + ["--require", "W2"])) == 0)
+    check("a threshold the set does not clear still fails",
+          _cli(*(_graph + ["--require", "W3"])) == 1)
+finally:
+    os.remove(_bare)
+
+
 print(f"\n{len(PASS)} passed, {len(FAIL)} failed")
 if FAIL:
     for f in FAIL:
