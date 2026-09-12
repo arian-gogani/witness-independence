@@ -144,8 +144,30 @@ class OperatorGraph:
 
     def covers(self, controller: str, subject_id: str,
                subject_controller: Optional[str]) -> bool:
-        """Does the graph say anything at all about this controller and subject?"""
-        if controller in self.operates:
+        """Does the graph say anything at all about this controller and subject?
+
+        The docstring is the specification and the first line used to break it.
+        `controller in self.operates` asks whether the controller is a KEY in
+        the operator map, which is a fact about the map, not about this
+        subject. A controller named anywhere, including with an empty list,
+        was therefore covered for every subject in existence, and the level
+        that followed reported that the witness "is affirmatively declared to
+        have no operational relationship to the subject" when nobody had
+        declared anything of the sort.
+
+        That is presence read as a claim, and it is the reason a receipt whose
+        signer was the subject could reach W4.
+
+        Coverage now means the graph names THIS subject, on one side or the
+        other. An operator entry that mentions the subject is coverage,
+        because a declared operational relationship is a statement about them
+        both. An empty entry is not, and neither is an entry about somebody
+        else.
+        """
+        operated = self.operates.get(controller) or []
+        if subject_id in operated:
+            return True
+        if subject_controller and subject_controller in operated:
             return True
         targets = self.independent_of.get(controller, [])
         return subject_id in targets or (bool(subject_controller)
@@ -286,9 +308,25 @@ def grade_one(receipt: Dict[str, Any], store: AnchorStore,
                 else "not checked",
         reads=[Fact("E1_resolved_key", pubkey_hex, OBSERVED, sig_how)],
     ))
-    if sig_ok is False:
-        return _result(W0, "the signature does not verify under the key that resolved "
-                           "from the anchor, so nothing is attested",
+    # `is False` let None through, and None is what verify_signature returns
+    # when it could not check at all, which on this machine is every run:
+    # run.sh hardcodes python3 and pynacl is not installed for it. So a
+    # receipt with a byte flipped signature graded W3 and the gate printed
+    # CONFORMANT, having verified nothing.
+    #
+    # Unchecked is not verified. A level is a claim about what was
+    # established, and nothing is established by a signature nobody read.
+    # This is the failure the whole scale exists to describe, in the tool
+    # that describes it.
+    if sig_ok is not True:
+        if sig_ok is False:
+            return _result(W0, "the signature does not verify under the key that "
+                               "resolved from the anchor, so nothing is attested",
+                           checks, kid, None, extract_subject(receipt), receipt)
+        return _result(W0, "the signature could not be checked at all (%s), so no "
+                           "level is established. Unchecked is not verified; "
+                           "install the signing library and run this again"
+                           % (sig_how or "no verifier available"),
                        checks, kid, None, extract_subject(receipt), receipt)
 
     controller = controller_of(anchor_url)
