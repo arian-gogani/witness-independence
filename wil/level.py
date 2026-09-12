@@ -352,6 +352,24 @@ def grade_one(receipt: Dict[str, Any], store: AnchorStore,
                     "derived from the subject identifier's own method and authority")],
     ))
 
+    # C4 recorded "no subject named" and then every check below it ran anyway,
+    # so a receipt about nobody graded W3 independently anchored. Independence
+    # is a relation between two parties. With one of them missing there is no
+    # relation to measure, and a scale that returns its second highest level
+    # for a question it cannot ask is worse than one that refuses.
+    #
+    # Every comparison downstream silently agreed: self_anchored is False
+    # because None equals nothing, the operator graph covers nothing because
+    # there is no subject to look up, and the absence of any relationship read
+    # as the absence of a bad one. That is the indeterminate sink running
+    # backwards, filing an unanswerable question as a clean answer.
+    if not subject_id:
+        return _result(W0, "the receipt names no subject, so there is no party "
+                           "for the signer to be independent OF. Independence is "
+                           "a relation and this receipt supplies only one side "
+                           "of it",
+                       checks, kid, anchor_url, None, receipt)
+
     # --- C5: self-anchored? --------------------------------------------------
     # subject_id is written by whoever wrote the receipt and compared raw. A
     # host is case insensitive and may carry a trailing root dot, so
