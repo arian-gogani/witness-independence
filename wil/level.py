@@ -12,7 +12,7 @@ import json
 from typing import Dict, Any, List, Optional
 
 from .evidence import Fact, Check, OBSERVED, DECLARED, ABSENT
-from .resolve import find_embedded_key, controller_of, AnchorStore
+from .resolve import find_embedded_key, controller_of, AnchorStore, _norm_host
 
 
 def _jcs(o):
@@ -353,7 +353,19 @@ def grade_one(receipt: Dict[str, Any], store: AnchorStore,
     ))
 
     # --- C5: self-anchored? --------------------------------------------------
-    self_anchored = bool(controller and (controller == subj_ctrl or controller == subject_id))
+    # subject_id is written by whoever wrote the receipt and compared raw. A
+    # host is case insensitive and may carry a trailing root dot, so
+    # platform.example, Platform.Example and platform.example. are one host
+    # written three ways, and only the first was caught here. The level went
+    # W1 to W3 on a capital letter, which is the whole scale answerable by
+    # the party it is meant to measure.
+    #
+    # controller and subj_ctrl now arrive normalised from controller_of, so
+    # only the direct subject_id comparison needs normalising here, and it
+    # needs it most: that one is the raw field.
+    self_anchored = bool(controller and (
+        controller == subj_ctrl
+        or controller == _norm_host(subject_id)))
     checks.append(Check(
         id="C5",
         question="Is the anchor controlled by the subject itself?",

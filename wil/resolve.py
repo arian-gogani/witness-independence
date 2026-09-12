@@ -38,6 +38,28 @@ def find_embedded_key(receipt: Dict[str, Any]) -> Optional[str]:
     return walk(receipt)
 
 
+def _norm_host(host: Optional[str]) -> Optional[str]:
+    """One spelling per host, so a comparison is between hosts not strings.
+
+    Every identity comparison in this package is `==` between two of these,
+    and both sides can be written by whoever wrote the receipt. A hostname is
+    case insensitive by definition and may carry a trailing dot for the root
+    label, so platform.example, Platform.Example and platform.example. are
+    one host written three ways. Comparing them raw meant a single capital
+    letter separated a witness from the subject it was signing for, and the
+    level went from W1 to W3 on that.
+
+    Normalising here rather than at each comparison, because there are
+    several and the next one added would have inherited the same hole.
+    """
+    if not host:
+        return host
+    h = host.strip().lower()
+    if h.endswith(".") and not h.endswith(":."):
+        h = h[:-1]
+    return h or None
+
+
 def controller_of(anchor_url: str) -> Optional[str]:
     """
     Derive the controlling identity of an anchor from where it was served.
@@ -45,13 +67,17 @@ def controller_of(anchor_url: str) -> Optional[str]:
     https://x.example.com/.well-known/jwks.json  ->  x.example.com
     did:web:example.com:keys:1                   ->  example.com
     file:./anchors/foo.json                      ->  local:foo.json  (test only)
+
+    The result is normalised. See _norm_host: these strings are compared with
+    == to decide whether a witness is the subject, and an unnormalised host
+    made that comparison answerable by choosing a capital letter.
     """
     if anchor_url.startswith("did:web:"):
         rest = anchor_url[len("did:web:"):]
         host = rest.split(":")[0]
-        return host.replace("%3A", ":")
+        return _norm_host(host.replace("%3A", ":"))
     if anchor_url.startswith(("http://", "https://")):
-        return urlparse(anchor_url).netloc or None
+        return _norm_host(urlparse(anchor_url).netloc or None)
     if anchor_url.startswith("file:"):
         return "local:" + os.path.basename(anchor_url[5:])
     return None
