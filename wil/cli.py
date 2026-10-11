@@ -1,7 +1,7 @@
 """wil: grade the witness independence of an attestation or a set of them."""
 import argparse, glob, hashlib, json, os, sys
 
-from .level import grade_set, OperatorGraph, ORDER
+from .level import grade_set, OperatorGraph, ORDER, WU, W2, W3
 from .resolve import AnchorStore
 
 ENGINE_VERSION = "0.1.0"
@@ -21,6 +21,45 @@ def corpus_digest(root):
             with open(path, "rb") as fh:
                 h.update(fh.read())
     return h.hexdigest()[:16]
+
+
+def require_error(level):
+    """Why `level` cannot be used as a --require threshold, or None.
+
+    Two rejections.
+
+    An unknown level used to reach ORDER.index and raise ValueError, which
+    exits with a traceback rather than a message.
+
+    W2? is rejected for a longer reason. ORDER is a single line from weakest to
+    strongest, and every other value on it describes the strength of what was
+    shown. W2? describes what was not determined. Mixing the two on one axis
+    means a gate can be satisfied by supplying less: the same receipts grade W2
+    with an operator graph and W2? without one, and W2? sorts higher, so
+    `--require W2?` fails for the party who declared their operator
+    relationships and passes for the party who did not.
+
+    That is this tool's own argument run backwards. Silence is not evidence of
+    independence, and a threshold that rewards it is not a threshold. Grading
+    still reports W2? exactly as before; it just cannot be demanded, because
+    "undetermined" is not a bar anything clears.
+    """
+    if level not in ORDER:
+        return ("--require %s is not a level. Levels are: %s"
+                % (level, ", ".join(ORDER)))
+    if level == WU:
+        return (
+            "--require %s is not a threshold.\n"
+            "  %s means the anchor is not the subject's and nothing has\n"
+            "  established that it is independent. It records what was not\n"
+            "  determined, not how much was shown, so it sits on ORDER above\n"
+            "  %s while being a weaker claim than %s.\n"
+            "\n"
+            "  Requiring it is satisfiable by withholding evidence: the same\n"
+            "  receipts grade %s with an operator graph and %s without one.\n"
+            "  Require %s or %s instead, depending on which you mean."
+            % (WU, WU, W2, W2, W2, WU, W2, W3))
+    return None
 
 
 def main(argv=None):
@@ -81,6 +120,10 @@ def main(argv=None):
             print("   note: this result rests on at least one operator-declared input")
 
     if args.require:
+        err = require_error(args.require)
+        if err:
+            print(err, file=sys.stderr)
+            return 2
         if ORDER.index(result["set_level"]) < ORDER.index(args.require):
             print(f"required {args.require}, measured {result['set_level']}",
                   file=sys.stderr)
